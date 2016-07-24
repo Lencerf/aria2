@@ -939,7 +939,8 @@ BitTorrent Specific Options
 
 .. option:: --seed-time=<MINUTES>
 
-  Specify seeding time in minutes. Also see the :option:`--seed-ratio` option.
+  Specify seeding time in (fractional) minutes. Also see the
+  :option:`--seed-ratio` option.
 
   .. note::
 
@@ -1174,7 +1175,8 @@ Advanced Options
 
   Rename file name if the same file already exists.
   This option works only in HTTP(S)/FTP download.
-  The new file name has a dot and a number(1..9999) appended.
+  The new file name has a dot and a number(1..9999) appended after the
+  name, but before the file extension, if any.
   Default: ``true``
 
 .. option:: --auto-save-interval=<SEC>
