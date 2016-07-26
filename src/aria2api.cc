@@ -395,6 +395,17 @@ int removeDownload(Session* session, A2Gid gid, bool force)
   return 0;
 }
 
+bool removeDownloadResult(Session* session, A2Gid gid)
+{
+  auto& rgman = session->context->reqinfo->getDownloadEngine()->getRequestGroupMan();
+  return rgman->findDownloadResult(gid) ? rgman->removeDownloadResult(gid) : true;
+}
+
+void purgeDownloadResult(Session* session) {
+  auto& rgman = session->context->reqinfo->getDownloadEngine()->getRequestGroupMan();
+  rgman->purgeDownloadResult();
+}
+
 int pauseDownload(Session* session, A2Gid gid, bool force)
 {
   auto& e = session->context->reqinfo->getDownloadEngine();
@@ -529,6 +540,56 @@ std::vector<A2Gid> getActiveDownload(Session* session)
   std::vector<A2Gid> res;
   for (const auto& group : groups) {
     res.push_back(group->getGID());
+  }
+  return res;
+}
+
+std::vector<A2Gid> getWaitingDownload(Session* session)
+{
+  auto& e = session->context->reqinfo->getDownloadEngine();
+  const RequestGroupList& groups = e->getRequestGroupMan()->getReservedGroups();
+  std::vector<A2Gid> res;
+  for (const auto& group : groups) {
+    res.push_back(group->getGID());
+  }
+  return res;
+}
+
+std::vector<A2Gid> getStoppedDownload(Session* session)
+{
+  auto& e = session->context->reqinfo->getDownloadEngine();
+  const DownloadResultList& groups = e->getRequestGroupMan()->getDownloadResults();
+  std::vector<A2Gid> res;
+  for (const auto& group : groups) {
+    res.push_back(group->getGID());
+  }
+  return res;
+}
+
+std::vector<A2Gid> getErrorDownload(Session* session)
+{
+  auto& e = session->context->reqinfo->getDownloadEngine();
+  const DownloadResultList& drs = e->getRequestGroupMan()->getDownloadResults();
+  std::vector<A2Gid> res;
+  for (const auto& dr : drs) {
+    if (dr->result != error_code::FINISHED && dr->result != error_code::REMOVED)
+    {
+      res.push_back(dr->getGID());
+    }
+  }
+  return res;
+}
+
+std::vector<A2Gid> getCompleteDownload(Session* session)
+{
+  auto& e = session->context->reqinfo->getDownloadEngine();
+  const DownloadResultList& drs = e->getRequestGroupMan()->getDownloadResults();
+  std::vector<A2Gid> res;
+  for (const auto& dr : drs) {
+    if (dr->result == error_code::FINISHED)
+    {
+      res.push_back(dr->getGID());
+    }
   }
   return res;
 }

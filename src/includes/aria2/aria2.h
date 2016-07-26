@@ -353,7 +353,10 @@ int addTorrent(Session* session, A2Gid* gid, const std::string& torrentFile,
  * Returns the array of active download GID.
  */
 std::vector<A2Gid> getActiveDownload(Session* session);
-
+std::vector<A2Gid> getWaitingDownload(Session* session);
+std::vector<A2Gid> getStoppedDownload(Session* session);
+std::vector<A2Gid> getErrorDownload(Session* session);
+std::vector<A2Gid> getCompleteDownload(Session* session);
 /**
  * @function
  *

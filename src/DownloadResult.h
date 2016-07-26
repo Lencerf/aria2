@@ -107,6 +107,8 @@ struct DownloadResult {
   // Don't allow copying
   DownloadResult(const DownloadResult& c) = delete;
   DownloadResult& operator=(const DownloadResult& c) = delete;
+
+  a2_gid_t getGID() const { return gid->getNumericId(); }
 };
 
 } // namespace aria2
