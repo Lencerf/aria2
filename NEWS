@@ -1,70 +1,59 @@
-aria2 1.25.0
+aria2 1.27.1
 ============
 
 Release Note
 ------------
 
-This release fixes many bugs reported so far.  There is no new
-functionality in this release.  We have fixed many performance issues
-in BitTorrent downloads.
+This release fixes the packaging bug that libssl_compat.h is missing
+in the tar balls.
 
 Changes
 -------
 
-* Update third-party libraries for binary releases
+* Add missing libssl_compat.h to SRCS
 
-* Send have message without too much delay
+  GH-744
 
-  Also send bitfield rather than have messages if bitfield message is
-  equal to or less than the sum of have messages which otherwise would
-  be sent.
+
 
-* Fix bug that causes bogus EOF connection failure in BitTorrent
-  downloads
+aria2 1.27.0
+============
 
-* Fix frequent interested/not interested message transmission
+Release Note
+------------
 
-* Fix frequent choke/unchoke message transmission
+This release fixes bug which may cause crash if UDP tracker is used.
+It adds new option --save-not-found which prevents downloads failed by
+"not found" error from being saved in session file.
 
-* Try to use available URI if all pooled requests are sleeping
-* Update expat in OSX build
+Changes
+-------
 
-  Closes GH-694
+* Hard-disable openssl in osx build
 
-* aria2mon: Add --secret option
+  Closes #739
 
-  Fixes GH-700
+* Fix possible cause of crash if UDP tracker is used
 
-* Set server status error on network failure in server performance
-  profile
+* Remove custom ftruncate64 for Android
 
-* Disable AI_ADDRCONFIG if no IPv4/IPv6 address is configured for any
-  interface
+  The latest NDK versions support ftruncate64, so building a local
+  copy of ftruncate64 is no longer needed.
 
-  Fixes GH-698
+  Also, the arm and x86 builds of ftruncate64 failed when targeting
+  API level 21 or higher, as they include <linux/err.h> which are not
+  present starting from API level 21.
 
-* Russian manual: Update aria2c.rst
+  Patch from Fredrik Fornwall
 
-  Patch from ITriskTI
+* Fix typo found by Debian's Lintian
 
-* Apply --retry-wait on 503 only
+* Add --save-not-found option
 
-* Ensure that lowest speed check is done even when download speed is 0
+* Update comment to match code
 
-  Fixes GH-686
+  Patch from Torbjörn Lönnemark
 
-* Document that -o is always relative to -d option
+* WinTLS: Better errors (from WSA)
 
-  Fixes GH-684
-
-* Allow larger ut_metadata size
-
-  Fixes GH-681
-
-* mingw: Change FD_SETSIZE to 32768
-
-  Fixes GH-678
-
-* Fix compile error on OS X
-
-  Fixes GH-683
+* Compile with openssl 1.1.0

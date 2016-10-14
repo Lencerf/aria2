@@ -1335,6 +1335,11 @@ Advanced Options
      file system, and does not allocate disk space at all.  This means
      that it does not help avoiding fragmentation.
 
+  .. note::
+
+    In multi file torrent downloads, the files adjacent forward to the specified files
+    are also allocated if they share the same piece.
+
 .. option:: --force-save[=true|false]
 
   Save download with :option:`--save-session <--save-session>` option
@@ -1342,6 +1347,13 @@ Advanced Options
   control file in that situations. This may be useful to save
   BitTorrent seeding which is recognized as completed state.
   Default: ``false``
+
+.. option:: --save-not-found[=true|false]
+
+  Save download with :option:`--save-session <--save-session>` option
+  even if the file was not found on the server. This option also saves
+  control file in that situations.
+  Default: ``true``
 
 .. option:: --gid=<GID>
 
@@ -1379,6 +1391,15 @@ Advanced Options
     system doesn't have :manpage:`getifaddrs(3)`, this option doesn't accept interface
     name.
 
+.. option:: --keep-unfinished-download-result[=true|false]
+
+  Keep unfinished download results even if doing so exceeds
+  :option:`--max-download-result`.  This is useful if all unfinished
+  downloads must be saved in session file (see
+  :option:`--save-session` option).  Please keep in mind that there is
+  no upper bound to the number of unfinished download result to keep.
+  If that is undesirable, turn this option off.  Default: ``true``
+
 .. option:: --max-download-result=<NUM>
 
   Set maximum number of download result kept in memory. The download
@@ -1388,8 +1409,10 @@ Advanced Options
   oldest download result is removed from the front of the queue and
   new one is pushed to the back. Setting big number in this option may
   result high memory consumption after thousands of
-  downloads. Specifying 0 means no download result is kept. Default:
-  ``1000``
+  downloads. Specifying 0 means no download result is kept.  Note that
+  unfinished downloads are kept in memory regardless of this option
+  value. See :option:`--keep-unfinished-download-result` option.
+  Default: ``1000``
 
 .. option:: --max-mmap-limit=<SIZE>
 
@@ -1519,11 +1542,6 @@ Advanced Options
   Setting ``0`` suppresses the output.
   Default: ``60``
 
-  .. note::
-
-    In multi file torrent downloads, the files adjacent forward to the specified files
-    are also allocated if they share the same piece.
-
 .. option:: -Z, --force-sequential[=true|false]
 
   Fetch URIs in the command-line sequentially and download each URI in a
@@ -1623,7 +1641,7 @@ Advanced Options
 
 .. option:: --socket-recv-buffer-size=<SIZE>
 
-  Set the maximum socket receive buffer in bytes.  Specifing ``0``
+  Set the maximum socket receive buffer in bytes.  Specifying ``0``
   will disable this option. This value will be set to socket file
   descriptor using ``SO_RCVBUF`` socket option with ``setsockopt()``
   call.  Default: ``0``
@@ -3233,6 +3251,7 @@ For information on the *secret* parameter, see :ref:`rpc_auth`.
 
   * :option:`bt-max-open-files <--bt-max-open-files>`
   * :option:`download-result <--download-result>`
+  * :option:`keep-unfinished-download-result <--keep-unfinished-download-result>`
   * :option:`log <-l>`
   * :option:`log-level <--log-level>`
   * :option:`max-concurrent-downloads <-j>`
