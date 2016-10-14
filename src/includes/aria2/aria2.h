@@ -368,7 +368,8 @@ std::vector<A2Gid> getCompleteDownload(Session* session);
  * returns 0 if it succeeds, or negative error code.
  */
 int removeDownload(Session* session, A2Gid gid, bool force = false);
-
+bool removeDownloadResult(Session* session, A2Gid gid);
+void purgeDownloadResult(Session* session);
 /**
  * @function
  *
